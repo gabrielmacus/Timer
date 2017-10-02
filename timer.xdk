@@ -5,7 +5,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "jsapp/template-blank-cordova-project-lite/sample.zip",
       "projectGuid": "4123dc32-2486-4add-b2a2-a75d647368df",
-      "lastModifiedDate": 1506958944694,
+      "lastModifiedDate": 1506959781892,
       "creationDate": 1506952105522
     },
     "sourceDirectory": "www",
@@ -83,7 +83,7 @@
         "runtime_": "Cordova 3.x",
         "name_": "Android",
         "preferences_": {
-          "android-minSdkVersion": "19",
+          "android-minSdkVersion": "15",
           "android-targetSdkVersion": "21",
           "android-installLocation": "auto",
           "Fullscreen": true,
@@ -95,8 +95,8 @@
         "certificateId_": "x8CuEkZXZ02bq4Yqa8M4qg2",
         "cordovaCLIVersion_": "6.5.0",
         "crosswalkVersion_": "23",
-        "appName_": "timer",
-        "appID_": "xdk.intel.template",
+        "appName_": "ProgressiveTimer",
+        "appID_": "gab.progressive.timer",
         "appAccess_": {
           "mode": "whitelist",
           "network": [
