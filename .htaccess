@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteRule ^home/?$ /index.php [NC,QSA,S=3]
+RewriteRule ^(contact-us|our-location|gallery)/?$ /$1.php [NC,QSA,S=2]
+RewriteRule ^(?!user\.php).*/$ /user.php?display_name=$0 [NC,QSA]
+
+RewriteCond %{HTTP_HOST} ^es\.example\.com$ [NC]
+RewriteCond %{QUERY_STRING} !language=es [NC]
+RewriteRule ^.*$ /$0?language=es [L,QSA]
