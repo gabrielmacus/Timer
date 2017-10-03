@@ -78,7 +78,7 @@
         width: 100%;
         position: absolute;
         text-align: center;
-        z-index: 10;
+        z-index: 610;
         font-size: 40px;
     }
     .main-container .time:active

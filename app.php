@@ -14,10 +14,13 @@ include ("app/autoload.php");
 
      <script src="js/angular.min.js"></script>
     <script src="js/angular-route.min.js"></script>
+    <script src="js/jquery-param.min.js"></script>
+    <script src="js/angular-websocket.min.js"></script>
     <link href="css/icon.css"
           rel="stylesheet">
     <link href="css/font.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
+
 </head>
 <body data-ng-app="app" >
 
@@ -28,7 +31,7 @@ try
 include ("app/auth/check-login.php");
 ?>
 <script>
-    var app = angular.module('app', ['ngRoute']);
+    var app = angular.module('app', ['ngRoute','ngWebSocket']);
 </script>
 
 <script src="js/controllers/timerController.js"></script>
@@ -36,7 +39,12 @@ include ("app/auth/check-login.php");
 <script>
     app.config(function($routeProvider) {
         $routeProvider
+
             .when("/", {
+                templateUrl : "views/timerManager.html",
+                controller:'timerController'
+            })
+            .when("/timer", {
                 templateUrl : "views/timer.html",
                 controller:'timerController'
             })

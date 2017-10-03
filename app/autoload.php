@@ -10,8 +10,12 @@ define('BASE_PATH',dirname(__DIR__));
 
 include ("db/autoload.php");
 
+include (BASE_PATH."/vendor/autoload.php");
+
 include ("lang/autoload.php");
 
 include ("auth/autoload.php");
+
+include ("websockets/Chat.php");
 
 $db = new ActiveRecord();
