@@ -7,7 +7,7 @@
  */
 
 define('BASE_PATH',dirname(dirname(__FILE__)));
-var_dump(BASE_PATH);
+
 include ("db/autoload.php");
 
 include (BASE_PATH."/vendor/autoload.php");
