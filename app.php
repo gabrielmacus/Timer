@@ -32,7 +32,19 @@ try
 ?>
 <script>
 
+    <?php if(empty($_GET["ws"]))
+    {
+        ?>
     wsUrl='ws://192.168.1.230:8080';
+    <?php
+    }
+    else
+    {
+        ?>
+    wsUrl='<?php echo $_GET["ws"];?>';
+    <?php
+    }?>
+
  //wsUrl='ws://localhost:8080';
     var app = angular.module('app', ['ngRoute','ngWebSocket']);
 </script>
