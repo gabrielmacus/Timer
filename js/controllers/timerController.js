@@ -14,6 +14,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
         $rootScope.containerStyle={};
         $rootScope.timer= { set:{},elapsed:{minutes:"00",seconds:"00"}};
 
+        scope = $rootScope;
         $rootScope.setCircleProgress=function (progress) {
 
             //https://codepen.io/HugoGiraudel/pen/BHEwo
@@ -189,7 +190,19 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                         break;
                     case 'change':
 
+                        if($rootScope.timer.interval)
+                        {
+                            var interval = $rootScope.timer.interval;
+                        }
+
+                        if(data.timer.startTime)
+                        {
+                            data.timer.startTime = new Date(data.timer.startTime);
+                        }
+
                         $rootScope.timer = data.timer;
+
+                        $rootScope.timer.interval=  interval;
 
                         if(!$rootScope.timer.interval)
                         {
