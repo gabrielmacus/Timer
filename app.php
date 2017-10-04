@@ -58,7 +58,11 @@ include ("app/auth/check-login.php");
 }
 catch (Exception $e)
 {
-
+    $file = BASE_PATH."/app/error.log";
+    $fh = fopen($file, 'a') or die("Can't open file");
+    $stringData = $e->getMessage()."\n";
+    fwrite($fh, $stringData);
+    fclose($fh);
     header("Location: index.php");
     exit();
 
