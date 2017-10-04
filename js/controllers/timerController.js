@@ -64,9 +64,9 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                     $rootScope.containerStyle.color='black';
                     break;
                 case 3:
-                    $rootScope.containerStyle.color='black';
+                    $rootScope.containerStyle.color='white';
                     $rootScope.containerStyle.animation='none';//'intermitent 0.5s linear 0s infinite';
-                    $rootScope.containerStyle.backgroundColor= 'red';
+                    $rootScope.containerStyle.backgroundColor= '#DD0000';
 
                     break;
             }
