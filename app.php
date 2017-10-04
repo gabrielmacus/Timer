@@ -41,7 +41,7 @@ try
     else
     {
         ?>
-    wsUrl='<?php echo $_GET["ws"];?>';
+    wsUrl='ws://<?php echo $_GET["ws"];?>:8080';
     <?php
     }?>
 
