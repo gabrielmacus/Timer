@@ -73,10 +73,25 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
         $rootScope.getTime=function(time)
         {
 
+
+            var minutes = Math.floor((time % 3600) / 60).toFixed(0);
+
+            var seconds = (time % 60).toFixed(0);
+
+            if(seconds > 59)
+            {
+                minutes++;
+                seconds=0;
+            }
+
+            /*
             var minutes = (Math.floor(time / 60)).toFixed(0);
 
             var seconds = ( time - minutes * 60).toFixed(0);
+            */
 
+            console.log(minutes);
+            console.log(seconds);
             return [minutes,seconds];
         }
         $rootScope.sendMsg=function (msg) {
@@ -170,12 +185,10 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                 {
                     delete data.timer.interval;
                 }
-                switch (data.type)
-                {
+                switch (data.type) {
                     case 'start':
 
-                        if($rootScope.timer.interval)
-                        {
+                        if ($rootScope.timer.interval) {
                             $interval.cancel($rootScope.timer.interval);
                         }
                         $rootScope.timer = data.timer;
@@ -190,10 +203,13 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                         break;
                     case 'change':
 
+                        var hasInterval =false;
                         if($rootScope.timer.interval)
                         {
                             var interval = $rootScope.timer.interval;
+                            hasInterval =true;
                         }
+
 
                         if(data.timer.startTime)
                         {
@@ -202,12 +218,15 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
 
                         $rootScope.timer = data.timer;
 
-                        $rootScope.timer.interval=  interval;
 
-                        if(!$rootScope.timer.interval)
+                        if(!hasInterval)
                         {
 
                             $rootScope.startTimer();
+                        }
+                        else
+                        {
+                            $rootScope.timer.interval=  interval;
                         }
 
                         break;
