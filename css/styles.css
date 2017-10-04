@@ -82,7 +82,7 @@
         position: absolute;
         text-align: center;
         z-index: 610;
-        font-size: 40px;
+        font-size: 35vw;
     }
     .main-container .time:active
     {
