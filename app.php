@@ -28,7 +28,7 @@ include ("app/autoload.php");
 try
 {
 
-include ("app/auth/check-login.php");
+//include ("app/auth/check-login.php");
 ?>
 <script>
     wsUrl='ws://localhost:8080';
