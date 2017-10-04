@@ -2,14 +2,14 @@ function error(e) {
     console.log(e);
     alert("Error");
 }
-app.controller('timerController', function($rootScope,$interval,$websocket) {
+app.controller('timerController', function($rootScope,$interval,$websocket,$http) {
 
 
     var conn =$websocket(wsUrl);
 
     conn.onOpen(function(e) {
         console.log("Connection established at " + new Date());
-        
+
         $rootScope.circleStyle={};
         $rootScope.containerStyle={};
         $rootScope.timer= { set:{},elapsed:{minutes:"00",seconds:"00"}};
@@ -22,11 +22,11 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
             progress = (progress > 100)?100:progress;
 
             var completeCircle = 360;
-            
+
             var percentComplete = completeCircle * (progress/100);
 
             $rootScope.circleStyle.spinner={transform:'rotate('+percentComplete+'deg)'};
-            
+
             if(progress <= 50 )
             {
 
@@ -42,7 +42,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
 
                 $rootScope.circleStyle.mask = {opacity:0};
             }
-            
+
         }
 
         $rootScope.requestSync =function () {
@@ -123,56 +123,70 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
 
             var interval=1000;
 
-            $rootScope.timer.startTime  = ($rootScope.timer.startTime) ?new Date($rootScope.timer.startTime):new Date() ;
+            $http.get('time.php').then(function(response){
 
-            $rootScope.setBackgroundState(1);
-
-
-            if(remote)
-            {
-                $rootScope.sendMsg({type:'start',timer:angular.copy($rootScope.timer)});
-            }
+                $rootScope.timer.startTime  = ($rootScope.timer.startTime) ?new Date($rootScope.timer.startTime):new Date( response.data.time*1000) ;
 
 
-
-            $rootScope.timer.interval= $interval(function () {
-
-                var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
-                var now = new Date();
-                elapsed =  Math.abs(now - $rootScope.timer.startTime);
-                var time = $rootScope.getTime((elapsed/1000));
-                elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
-
-                $rootScope.setCircleProgress(elapsedPercent);
+                $rootScope.setBackgroundState(1);
 
 
-                if(elapsedPercent >= 100)
+                if(remote)
                 {
-                    $rootScope.setBackgroundState(3);
-                }
-                else
-                {
-                    $rootScope.setBackgroundState(1);
-
-                    if(totalSeconds-((elapsed/1000))<=60)
-                    {
-                        $rootScope.setBackgroundState(2);
-                    }
-
+                    $rootScope.sendMsg({type:'start',timer:angular.copy($rootScope.timer)});
                 }
 
 
-                $rootScope.timer.elapsed.minutes = ("0"+time[0]).slice(-2);
 
-                $rootScope.timer.elapsed.seconds = ("0"+time[1]).slice(-2);
+                $rootScope.timer.interval= $interval(function () {
 
-                /*
-                 if(elapsedPercent >= 100)
-                 {
-                 $interval.cancel($scope.timer.interval);
-                 }*/
 
-            },interval);
+                    $http.get('time.php').then(function(response) {
+
+                        var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
+                        var now = new Date(response.data.time * 1000 );
+                        elapsed =  Math.abs(now - $rootScope.timer.startTime);
+                        var time = $rootScope.getTime((elapsed/1000));
+                        elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
+
+                        $rootScope.setCircleProgress(elapsedPercent);
+
+
+                        if(elapsedPercent >= 100)
+                        {
+                            $rootScope.setBackgroundState(3);
+                        }
+                        else
+                        {
+                            $rootScope.setBackgroundState(1);
+
+                            if(totalSeconds-((elapsed/1000))<=60)
+                            {
+                                $rootScope.setBackgroundState(2);
+                            }
+
+                        }
+
+
+                        $rootScope.timer.elapsed.minutes = ("0"+time[0]).slice(-2);
+
+                        $rootScope.timer.elapsed.seconds = ("0"+time[1]).slice(-2);
+
+                        /*
+                         if(elapsedPercent >= 100)
+                         {
+                         $interval.cancel($scope.timer.interval);
+                         }*/
+
+                    });
+
+
+                },interval);
+
+
+
+            },error);
+
 
 
         }
