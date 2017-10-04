@@ -100,7 +100,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
         }
 
         var changeTimer=function () {
-            if($rootScope.interval)
+            if($rootScope.timer.interval)
             {
 
                 $rootScope.sendMsg({type:'change',timer:$rootScope.timer});
@@ -110,15 +110,13 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
         document.querySelector('.seconds').oninput=changeTimer;
 
 
-         intervals=[];
 
         $rootScope.startTimer=function (remote) {
 
-            console.log("Timer started "+new Date());
-
-            if(!$rootScope.interval)
+            if($rootScope.timer.interval)
             {
-
+                $interval.cancel($rootScope.timer.interval);
+            }
 
             var elapsed=0;
 
@@ -141,71 +139,73 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
 
 
-                $rootScope.interval= $interval(function () {
+                $rootScope.timer.interval= $interval(function () {
 
 
-                       $http.get('time.php').then(function(response) {
+                    $http.get('time.php').then(function(response) {
 
-                           var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
-                           var now = new Date(response.data.time * 1000 );
-                           elapsed =  Math.abs(now - $rootScope.timer.startTime);
-                           var time = $rootScope.getTime((elapsed/1000));
-                           elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
+                        var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
+                        var now = new Date(response.data.time * 1000 );
+                        elapsed =  Math.abs(now - $rootScope.timer.startTime);
+                        var time = $rootScope.getTime((elapsed/1000));
+                        elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
 
-
-                           if(elapsedPercent >= 100)
-                           {
-                               $rootScope.setBackgroundState(3);
-                           }
-                           else
-                           {
-                               $rootScope.setBackgroundState(1);
-
-                               if(totalSeconds-((elapsed/1000))<=60)
-                               {
-                                   $rootScope.setBackgroundState(2);
-                               }
-
-                           }
+                        $rootScope.setCircleProgress(elapsedPercent);
 
 
-                           $rootScope.timer.elapsed.minutes = ("0"+time[0]).slice(-2);
+                        if(elapsedPercent >= 100)
+                        {
+                            $rootScope.setBackgroundState(3);
+                        }
+                        else
+                        {
+                            $rootScope.setBackgroundState(1);
 
-                           $rootScope.timer.elapsed.seconds = ("0"+time[1]).slice(-2);
-
-                           /*
-                            if(elapsedPercent >= 100)
+                            if(totalSeconds-((elapsed/1000))<=60)
                             {
-                            $interval.cancel($scope.timer.interval);
-                            }*/
+                                $rootScope.setBackgroundState(2);
+                            }
 
-                       });
+                        }
 
+
+                        $rootScope.timer.elapsed.minutes = ("0"+time[0]).slice(-2);
+
+                        $rootScope.timer.elapsed.seconds = ("0"+time[1]).slice(-2);
+
+                        /*
+                         if(elapsedPercent >= 100)
+                         {
+                         $interval.cancel($scope.timer.interval);
+                         }*/
+
+                    });
 
 
                 },interval);
-                intervals.push($rootScope.interval);
+
 
 
             },error);
 
 
-            }
+
         }
         conn.onMessage(
             function(e) {
 
 
                 var data = JSON.parse(e.data);
-
+                if(data.timer)
+                {
+                    delete data.timer.interval;
+                }
                 switch (data.type) {
                     case 'start':
 
-                        if ($rootScope.interval) {
-                            $interval.cancel($rootScope.interval);
-                            $rootScope.interval = false;
+                        if ($rootScope.timer.interval) {
+                            $interval.cancel($rootScope.timer.interval);
                         }
-
                         $rootScope.timer = data.timer;
 
                         $rootScope.startTimer();
@@ -218,6 +218,13 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                         break;
                     case 'change':
 
+                        var hasInterval =false;
+                        if($rootScope.timer.interval)
+                        {
+                            var interval = $rootScope.timer.interval;
+                            hasInterval =true;
+                        }
+
 
                         if(data.timer.startTime)
                         {
@@ -227,10 +234,14 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                         $rootScope.timer = data.timer;
 
 
-                        if(!$rootScope.interval)
+                        if(!hasInterval)
                         {
 
                             $rootScope.startTimer();
+                        }
+                        else
+                        {
+                            $rootScope.timer.interval=  interval;
                         }
 
                         break;
@@ -251,12 +262,12 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                 $rootScope.sendMsg({type:'stop'});
             }
 
-            console.log($rootScope.interval);
-            if($rootScope.interval)
+            if($rootScope.timer.interval)
             {
-                $interval.cancel($rootScope.interval);
-                $rootScope.interval = false;
+
+                $interval.cancel($rootScope.timer.interval);
             }
+            $rootScope.setCircleProgress(0);
             $rootScope.containerStyle={};
             $rootScope.timer= { set:{},elapsed:{minutes:"00",seconds:"00"}};
         }
