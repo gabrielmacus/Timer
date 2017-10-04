@@ -55,7 +55,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                 case 1:
 
                     $rootScope.containerStyle.animation='none';
-                    $rootScope.containerStyle.backgroundColor='#212121';
+                    $rootScope.containerStyle.backgroundColor='black';
                     $rootScope.containerStyle.color='white';
                     break;
                 case 2:
@@ -65,7 +65,8 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                     break;
                 case 3:
                     $rootScope.containerStyle.color='black';
-                    $rootScope.containerStyle.animation='intermitent 0.5s linear 0s infinite';
+                    $rootScope.containerStyle.animation='none';//'intermitent 0.5s linear 0s infinite';
+                    $rootScope.containerStyle.backgroundColor= '#D32F2F';
 
                     break;
             }
