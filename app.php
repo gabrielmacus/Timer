@@ -31,7 +31,7 @@ try
 //include ("app/auth/check-login.php");
 ?>
 <script>
-    wsUrl='ws://localhost:8080';
+    wsUrl='ws://<?php echo getHostByName(getHostName()); ?>:8080';
     var app = angular.module('app', ['ngRoute','ngWebSocket']);
 </script>
 
