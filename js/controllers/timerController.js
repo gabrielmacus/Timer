@@ -5,7 +5,7 @@ function error(e) {
 app.controller('timerController', function($rootScope,$interval,$websocket) {
 
 
-    var conn =$websocket('ws://localhost:8080');
+    var conn =$websocket(wsUrl);
 
     conn.onOpen(function(e) {
         console.log("Connection established at " + new Date());
@@ -13,7 +13,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
         $rootScope.circleStyle={};
         $rootScope.containerStyle={};
         $rootScope.timer= { set:{},elapsed:{minutes:"00",seconds:"00"}};
-        scope = $rootScope;
+
         $rootScope.setCircleProgress=function (progress) {
 
             //https://codepen.io/HugoGiraudel/pen/BHEwo
@@ -44,6 +44,9 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
             
         }
 
+        $rootScope.requestSync =function () {
+            $rootScope.sendMsg({type:'sync-request'});
+        }
         $rootScope.setBackgroundState=function (state) {
 
             switch (state)
@@ -79,16 +82,18 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
             conn.send(JSON.stringify(msg));
         }
 
-        $rootScope.$watchCollection("timer.set",function () {
-
-
+        var changeTimer=function () {
             if($rootScope.timer.interval)
             {
 
-                $rootScope.sendMsg({type:'change',set:$rootScope.timer.set});
+                $rootScope.sendMsg({type:'change',timer:$rootScope.timer});
             }
+        };
+        document.querySelector('.minutes').oninput=changeTimer;
+        document.querySelector('.seconds').oninput=changeTimer;
 
-        },true);
+
+
         $rootScope.startTimer=function (remote) {
 
             if($rootScope.timer.interval)
@@ -102,7 +107,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
 
             var interval=1000;
 
-            var startTime = new Date();
+            $rootScope.timer.startTime  = ($rootScope.timer.startTime) ?new Date($rootScope.timer.startTime):new Date() ;
 
             $rootScope.setBackgroundState(1);
 
@@ -118,7 +123,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
 
                 var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
                 var now = new Date();
-                elapsed =  Math.abs(now - startTime);
+                elapsed =  Math.abs(now - $rootScope.timer.startTime);
                 var time = $rootScope.getTime((elapsed/1000));
                 elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
 
@@ -158,7 +163,12 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
         conn.onMessage(
             function(e) {
 
+
                 var data = JSON.parse(e.data);
+                if(data.timer)
+                {
+                    delete data.timer.interval;
+                }
                 switch (data.type)
                 {
                     case 'start':
@@ -179,7 +189,18 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                         break;
                     case 'change':
 
-                        $rootScope.timer.set = data.set;
+                        $rootScope.timer = data.timer;
+
+                        if(!$rootScope.timer.interval)
+                        {
+
+                            $rootScope.startTimer();
+                        }
+
+                        break;
+                    case 'sync-request':
+
+                        changeTimer();
 
                         break;
                 }
@@ -219,7 +240,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                 $rootScope.timer.set[prop]=0;
             }
 
-
+            changeTimer();
 
         }
         $rootScope.substract=function (prop,max) {
@@ -237,8 +258,13 @@ app.controller('timerController', function($rootScope,$interval,$websocket) {
                 $rootScope.timer.set[prop]=max;
             }
 
+            changeTimer();
+
+
         }
 
+
+        $rootScope.requestSync();
         $rootScope.$apply();
 
 

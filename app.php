@@ -31,12 +31,14 @@ try
 include ("app/auth/check-login.php");
 ?>
 <script>
+    wsUrl='ws://190.191.64.160:8080';
     var app = angular.module('app', ['ngRoute','ngWebSocket']);
 </script>
 
 <script src="js/controllers/timerController.js"></script>
 
 <script>
+
     app.config(function($routeProvider) {
         $routeProvider
 

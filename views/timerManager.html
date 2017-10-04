@@ -1,9 +1,9 @@
 <div class="timer-controls">
     <div class="minutes control">
-            <span data-ng-click="add('minutes',99)" class="icon">
+            <span data-ng-click="add('minutes',99)" class=" icon">
                 <i class="material-icons">keyboard_arrow_up</i>
             </span>
-        <input  placeholder="mm" data-ng-model="timer.set.minutes" type="number" >
+        <input  placeholder="mm" class="minutes" data-ng-model="timer.set.minutes" type="number" >
             <span  data-ng-click="substract('minutes',99)" class="icon">
                 <i class="material-icons">keyboard_arrow_down</i>
             </span>
@@ -12,7 +12,7 @@
             <span  data-ng-click="add('seconds',59)" class="icon">
                 <i class="material-icons">keyboard_arrow_up</i>
             </span>
-        <input  placeholder="ss" data-ng-model="timer.set.seconds" type="number" >
+        <input  placeholder="ss" class="seconds" data-ng-model="timer.set.seconds" type="number" >
             <span  data-ng-click="substract('seconds',59)" class="icon">
                 <i class="material-icons">keyboard_arrow_down</i>
             </span>

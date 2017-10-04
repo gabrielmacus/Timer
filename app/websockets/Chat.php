@@ -13,10 +13,10 @@ use Ratchet\ConnectionInterface;
 class Chat implements MessageComponentInterface
 {
     protected $clients;
-
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients[$conn->resourceId] =$conn;
+
 
         echo "New connection! ({$conn->resourceId})\n";
     }
