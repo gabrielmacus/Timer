@@ -1,22 +1,30 @@
-<div class="timer-controls" >
+<div class="timer-controls" data-ng-style="timeStyle" >
     <div class="minutes control">
             <span data-ng-click="add('minutes',99)" class=" icon">
                 <i class="material-icons">keyboard_arrow_up</i>
             </span>
-        <input  placeholder="mm" class="minutes" data-ng-model="timer.set.minutes" type="number" >
+        <input  max="99" min="0" placeholder="mm" class="minutes" data-ng-model="timer.set.minutes" type="number" >
             <span  data-ng-click="substract('minutes',99)" class="icon">
                 <i class="material-icons">keyboard_arrow_down</i>
             </span>
     </div>
     <div class="seconds control">
-            <span  data-ng-click="add('seconds',59)" class="icon">
-                <i class="material-icons">keyboard_arrow_up</i>
+
+
+            <span   class="icon disabled">
+               <i class="material-icons">keyboard_arrow_up</i>
             </span>
-        <input  placeholder="ss" class="seconds" data-ng-model="timer.set.seconds" type="number" >
-            <span  data-ng-click="substract('seconds',59)" class="icon">
+
+        <input max="59" min="0"  disabled placeholder="ss" class="seconds" data-ng-model="timer.set.seconds" type="number" >
+
+            <span   class="icon disabled">
                 <i class="material-icons">keyboard_arrow_down</i>
             </span>
+
     </div>
+</div>
+<div class="progress-bar">
+    <div data-ng-style="progressStyle" class="progress animated"></div>
 </div>
 <style>
     .wrapper {
@@ -134,7 +142,7 @@
         <i class="material-icons">autorenew</i>
     </span>
 
-    <span class="toggle action" data-ng-click="toggleTimer(true)">
+    <span class="toggle action" data-ng-style="toggleStyle" data-ng-click="toggleTimer(true)">
              <i class="material-icons" data-ng-if="timer.running">timer_off</i>
         <i class="material-icons" data-ng-if="!timer.running">timer</i>
     </span>

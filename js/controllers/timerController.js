@@ -12,9 +12,17 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
         $rootScope.circleStyle={};
         $rootScope.containerStyle={};
-        $rootScope.timer= {running:false, set:{},elapsed:{minutes:"00",seconds:"00"}};
 
+        $rootScope.setTimerDefault=function () {
+            $rootScope.progressStyle={};
+            $rootScope.timer= {running:false, set:{minutes:0,seconds:0},elapsed:{minutes:"00",seconds:"00"}};
+        }
+
+        $rootScope.setTimerDefault();
         scope = $rootScope;
+
+
+
         $rootScope.setCircleProgress=function (progress) {
 
             //https://codepen.io/HugoGiraudel/pen/BHEwo
@@ -111,6 +119,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
             $http.get("time.php").then(function(response)
             {
+                $rootScope.toggleStyle = "";
                 $rootScope.timer.running=false;
                 $rootScope.timer.pausedAt = response.data.time*1000;
                 if(remote)
@@ -124,6 +133,8 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
         $rootScope.toggleTimer =function (remote) {
             if(!$rootScope.timer.running)
             {
+
+
                 $http.get('time.php').then(function(response) {
 
                     var offset=0;
@@ -134,24 +145,30 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                     }
 
                     $rootScope.timer.startTime = new Date(response.data.time * 1000 - offset);
+
                     $rootScope.startTimer(remote);
+
+                    changeTimer();
                 });
 
 
             }
             else
             {
+
                 $rootScope.pauseTimer(remote);
 
             }
         }
         $rootScope.startTimer=function (remote) {
             $rootScope.timer.running=true;
+            $rootScope.toggleStyle={backgroundColor:"#3949AB"};
             if(!$rootScope.interval)
             {
                 console.log("Timer started "+new Date());
 
-            var elapsed=0;
+
+                var elapsed=0;
 
             var elapsedPercent =0;
 
@@ -174,6 +191,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
                 $rootScope.interval= $interval(function () {
 
+                    console.log("Cronometer running: "+$rootScope.timer.running);
                          if($rootScope.timer.running)
                          {
                              $http.get('time.php').then(function(response) {
@@ -187,6 +205,8 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                                  var time = $rootScope.getTime((elapsed/1000));
                                  elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
 
+
+                                 $rootScope.progressStyle={width:elapsedPercent+"%"};
 
                                  if(elapsedPercent >= 100)
                                  {
@@ -252,6 +272,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                     case 'change':
 
 
+                        console.log(data.timer);
                         if(data.timer.startTime)
                         {
                             data.timer.startTime = new Date(data.timer.startTime);
@@ -291,8 +312,10 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                 $rootScope.interval = false;
             }
             $rootScope.containerStyle={};
-            $rootScope.timer= { pause:false,set:{},elapsed:{minutes:"00",seconds:"00"}};
+            $rootScope.setTimerDefault();
         }
+
+
         $rootScope.add=function (prop,max) {
 
             if(!$rootScope.timer.set[prop])
