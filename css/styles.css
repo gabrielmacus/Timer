@@ -296,9 +296,21 @@
 
 
 
+    @media all and (max-height: 407px)
+    {
+        .time:not(.huge-font)
+        {
+            font-size: 10vw;
+        }
+    }
     @media all and (max-width: 768px)
     {
 
+        .main-container .timer-controls
+        {
+
+            margin-top: 10%;
+        }
         .main-container
         {
             height: 100%;
