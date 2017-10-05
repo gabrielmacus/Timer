@@ -112,24 +112,25 @@
         color: black;
 
     }
+    .huge-font,.huge-font > *
+    {
+        font-size: 30vw;
+        font-weight: 600;
+    }
     .main-container .time
     {
         width: 100%;
         position: absolute;
         text-align: center;
         z-index: 610;
-        font-size: 20vw;
+        font-size: 15vw;
         font-weight: 600;
     }
     .main-container .time:active
     {
 
     }
-    .huge-font,.huge-font > *
-    {
-        font-size: 30vw;
-        font-weight: 600;
-    }
+
 
     /*
     @media screen and (max-width: 768px) {
