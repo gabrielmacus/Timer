@@ -23,16 +23,39 @@ class Chat implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $numRecv = count($this->clients) - 1;
-        echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
-        foreach ($this->clients as $k=>$client) {
-            if ($from->resourceId !== $k) {
-                // The sender is not the receiver, send to each client connected
-                $client->send($msg);
-            }
+        $jsonMsg=json_decode($msg,true);
+        $c=[];
+        switch ($jsonMsg["type"])
+        {
+            default:
+                //Por defecto, envio los msgs a cada uno de los usuarios (menos al emisor)
+                foreach ($this->clients as $k=>$client) {
+                    if ($from->resourceId !== $k) {
+                        $c[]=$k;
+                        // The sender is not the receiver, send to each client connected
+                        $client->send($msg);
+                    }
+                }
+                break;
+            case 'sync-request':
+                //En el caso de que quiera sincronizar, solo le envio el msg a un cliente
+
+                foreach ($this->clients as $k=>$client) {
+                    if ($from->resourceId !== $k) {
+                        $c[]=$k;
+                        // The sender is not the receiver, send to each client connected
+                        $client->send($msg);
+                        break;
+                    }
+                }
+
+                break;
         }
+
+        $c=implode(",",$c);
+        echo "{$jsonMsg["type"]} to {$c}\n";
+
     }
 
     public function onClose(ConnectionInterface $conn)

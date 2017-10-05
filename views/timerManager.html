@@ -1,4 +1,4 @@
-<div class="timer-controls">
+<div class="timer-controls" >
     <div class="minutes control">
             <span data-ng-click="add('minutes',99)" class=" icon">
                 <i class="material-icons">keyboard_arrow_up</i>
@@ -101,7 +101,7 @@
 </style>
 
 
-<div class="time" data-ng-click="startTimer(true)">
+<div class="time">
     <span class="minutes">{{timer.elapsed.minutes}}</span>
     <span class="dots">:</span>
     <span class="seconds">{{timer.elapsed.seconds}}</span>
@@ -128,8 +128,15 @@
 </div>
 -->
 
-<footer class="footer animated" data-ng-click="stopTimer(true)">
-    <span class="stop">
-        <i class="material-icons">timer_off</i>
+<footer class="footer animated" >
+
+    <span class="stop action" data-ng-click="stopTimer(true)">
+        <i class="material-icons">autorenew</i>
     </span>
+
+    <span class="toggle action" data-ng-click="toggleTimer(true)">
+             <i class="material-icons" data-ng-if="timer.running">timer_off</i>
+        <i class="material-icons" data-ng-if="!timer.running">timer</i>
+    </span>
+
 </footer>
