@@ -181,15 +181,6 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                                  var totalSeconds =  ($rootScope.timer.set.minutes*60)+$rootScope.timer.set.seconds;
                                  var now = new Date(response.data.time * 1000 );
 
-                                 /*
-                                 if($rootScope.timer.pausedAt)
-                                 {
-                                    elapsed = Math.abs($rootScope.timer.pausedAt - now);
-                                 }
-                                 else
-                                 {
-                                     elapsed =  Math.abs(now - $rootScope.timer.startTime);
-                                 }*/
 
                                  elapsed =  Math.abs(now - $rootScope.timer.startTime);
 
