@@ -109,17 +109,18 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
             if($rootScope.interval)
             {
 
-                $rootScope.sendMsg({type:'change',timer:$rootScope.timer});
+                console.log($rootScope.timer);
+                $rootScope.sendMsg({type:'change',timer:angular.copy($rootScope.timer)});
             }
         };
         document.querySelector('.minutes').oninput=changeTimer;
         document.querySelector('.seconds').oninput=changeTimer;
 
         $rootScope.pauseTimer=function (remote) {
-
+    
             $http.get("time.php").then(function(response)
             {
-                $rootScope.toggleStyle = "";
+
                 $rootScope.timer.running=false;
                 $rootScope.timer.pausedAt = response.data.time*1000;
                 if(remote)
@@ -145,7 +146,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                     }
 
                     $rootScope.timer.startTime = new Date(response.data.time * 1000 - offset);
-
+                    $rootScope.timer.running=true;
                     $rootScope.startTimer(remote);
 
                     changeTimer();
@@ -160,9 +161,10 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
             }
         }
+
         $rootScope.startTimer=function (remote) {
-            $rootScope.timer.running=true;
-            $rootScope.toggleStyle={backgroundColor:"#3949AB"};
+            
+
             if(!$rootScope.interval)
             {
                 console.log("Timer started "+new Date());
@@ -191,7 +193,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
                 $rootScope.interval= $interval(function () {
 
-                    console.log("Cronometer running: "+$rootScope.timer.running);
+
                          if($rootScope.timer.running)
                          {
                              $http.get('time.php').then(function(response) {
@@ -203,8 +205,8 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                                  elapsed =  Math.abs(now - $rootScope.timer.startTime);
 
                                  var time = $rootScope.getTime((elapsed/1000));
-                                 elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
 
+                                 elapsedPercent =Math.floor( ((elapsed/1000)*100) / totalSeconds);
 
                                  $rootScope.progressStyle={width:elapsedPercent+"%"};
 
@@ -247,9 +249,8 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
         conn.onMessage(
             function(e) {
 
-
-
                 var data = JSON.parse(e.data);
+
                 switch (data.type) {
                     case 'start':
 
@@ -257,6 +258,7 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
 
 
                             $rootScope.timer = data.timer;
+                            $rootScope.timer.running=true;
                             $rootScope.startTimer();
 
                         }
@@ -271,15 +273,12 @@ app.controller('timerController', function($rootScope,$interval,$websocket,$http
                         break;
                     case 'change':
 
-
-                        console.log(data.timer);
                         if(data.timer.startTime)
                         {
                             data.timer.startTime = new Date(data.timer.startTime);
                         }
 
                         $rootScope.timer = data.timer;
-
 
                         if(!$rootScope.interval)
                         {

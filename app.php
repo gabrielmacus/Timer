@@ -16,9 +16,7 @@ include ("app/autoload.php");
     <script src="js/angular-route.min.js"></script>
     <script src="js/jquery-param.min.js"></script>
     <script src="js/angular-websocket.min.js"></script>
-    <link href="css/icon.css"
-          rel="stylesheet">
-    <link href="css/font.css" rel="stylesheet">
+    <link href="css/roboto/stylesheet.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
 
 </head>
