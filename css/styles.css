@@ -255,6 +255,7 @@
         background: #E0E0E0;
         bottom: 0;
         position: absolute;
+        border: solid 1px black;
     }
     .progress
     {
