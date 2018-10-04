@@ -30,7 +30,7 @@ try
     <?php if(empty($_GET["ws"]))
     {
         ?>
-    wsUrl='ws://localhost:8080';
+    wsUrl='ws://crono.local:8080';
     <?php
     }
     else
