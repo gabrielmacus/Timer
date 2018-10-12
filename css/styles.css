@@ -1,0 +1,387 @@
+
+
+/* W3.CSS 2.99 Mar 2017 by Jan Egil and Borge Refsnes */
+html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+    /* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+    @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url(icons/MaterialIcons-Regular.eot); /* For IE6-8 */
+        src: local('Material Icons'),
+        local('MaterialIcons-Regular'),
+        url(icons/MaterialIcons-Regular.woff2) format('woff2'),
+        url(icons/MaterialIcons-Regular.woff) format('woff'),
+        url(icons/MaterialIcons-Regular.ttf) format('truetype');
+    }
+    .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;  /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+
+        /* Support for all WebKit browsers. */
+        -webkit-font-smoothing: antialiased;
+        /* Support for Safari and Chrome. */
+        text-rendering: optimizeLegibility;
+
+        /* Support for Firefox. */
+        -moz-osx-font-smoothing: grayscale;
+
+        /* Support for IE. */
+        font-feature-settings: 'liga';
+    }
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+    body {
+        line-height: 1;
+    }
+    ol, ul {
+        list-style: none;
+    }
+    blockquote, q {
+        quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    html,body
+    {
+        font-family: 'Roboto', sans-serif;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+    }
+    body
+    {
+
+
+        background-color: #F5F5F5;
+    }
+    .main-container
+    {
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+        /*
+        width: 50%;
+        height: 80%;*/
+        position: relative;
+        align-items: center;
+        background: white;
+        color: black;
+
+    }
+    .huge-font,.huge-font > *
+    {
+        font-size: 30vw;
+        font-weight: 600;
+    }
+    .main-container .time
+    {
+        width: 100%;
+        position: absolute;
+        text-align: center;
+        z-index: 610;
+        font-size: 15vw;
+        font-weight: 600;
+    }
+    .main-container .time:active
+    {
+
+    }
+
+
+    /*
+    @media screen and (max-width: 768px) {
+        .huge-font,.huge-font > *
+        {
+            font-size: 25vw;
+        }
+    }*/
+    .main-container .circle-wrapper
+    {
+        width: 100%;
+        height: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .main-container .circle
+    {
+        position: absolute;
+        border: #212121 solid 8px;
+        width: 80vw;
+        border-radius: 50%;
+        height: 80vw;
+        max-width: 320px;
+        margin: auto;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        max-height: 320px;
+    }
+    .main-container .circle.circle-elapsed
+    {
+
+
+    }
+
+
+    .main-container .timer-controls .seconds
+    {
+        display: none;
+    }
+
+    .main-container .timer-controls
+    {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 5%;
+        /* margin: auto; */
+        width: 90%;
+        margin-top: 5%;
+        display: flex;
+        justify-content: center;
+    }
+    .main-container .timer-controls .control
+    {
+        cursor:pointer;
+        width: 100%;
+        max-width: 800px;
+        /*
+        width: 48%;
+        margin-right: 4%;*/
+        float: left;
+    }
+    .main-container .timer-controls .control .icon:hover
+    {
+        background-color: #E0E0E0;
+    }
+    .main-container .timer-controls .control input
+    {
+        width: 100%;
+        border: 0;
+        outline:0 ;
+        text-align: center;
+        font-size: 50px;
+        /*font-size: 24px;*/
+        background-color: #EEEEEE
+    ;
+    }
+    .main-container .timer-controls .control:nth-child(2n)
+    {
+        margin: 0;
+    }
+
+    .main-container .timer-controls .control .icon
+    {
+        background: #FAFAFA;
+        width: 100%;
+        text-align: center;
+
+        transition:all 0.1s ease-in;
+        float: left;
+    }
+    .main-container .timer-controls .control .icon i{
+        font-size: 45px;
+        color: black;
+    }
+    .footer
+    {
+
+        position: absolute;
+        display: flex;
+        align-items: center;
+        color: white;
+        bottom: 5%;
+        width: 90%;
+        left: 5%;
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: space-between;
+
+
+
+    }
+
+    .footer .action
+    {
+        width: calc(100% / 3 - 5px);
+        padding: 15px;
+        margin-bottom: 10px;
+        text-align: center;
+        background: #303F9F;
+        cursor:pointer;
+        transition:all 0.1s ease-in;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+    .footer .action:hover
+    {
+        opacity: 0.7;
+    }
+    .footer .action:last-child
+    {
+        margin: 0;
+    }
+    .footer .action:active
+    {    box-shadow: none;
+
+    }
+    .footer .stop
+    {
+        background-color: #EF5350;
+    }
+    .footer .toggle
+    {
+        background-color: #4CAF50;
+    }
+    .footer .add-five
+    {
+        background-color: #0091EA;
+    }
+
+
+
+    .disabled
+    {
+        color:transparent;
+    }
+
+    .progress-bar
+    {
+        width: 100%;
+        height: 7vh;
+        background: #E0E0E0;
+        bottom: 0;
+        overflow: hidden;
+    }
+
+    .main-container.timer .progress-bar
+    {
+        height: 10vh;
+        position: absolute;
+    }
+    .main-container.timer  .progress-bar
+    {
+
+        border-top: solid 1vh black;
+    }
+
+    .progress
+    {
+        background-color: rgb(57, 73, 171);
+        width: 0%;
+        height: 100%;
+
+    }
+    .footer  i
+    {
+        font-size: 30px;
+    }
+    .animated
+    {
+        -webkit-transition: all 200ms;
+        -moz-transition: all 200ms;;
+        -ms-transition: all 200ms;;
+        -o-transition: all 200ms;;
+        transition: all 200ms;;
+    }
+    .error
+    {
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        display: flex;
+        text-align: center;
+    }
+    .error p
+    {
+        margin: auto;
+        font-size: 25px;
+    }
+
+
+    @keyframes intermitent {
+        from {background-color: white;}
+        to {background-color: #D32F2F;}
+    }
+
+
+
+    @media all and (max-height: 407px)
+    {
+        .time:not(.huge-font)
+        {
+            font-size: 10vw;
+        }
+    }
+    @media all and (max-width: 768px)
+    {
+
+        .main-container .timer-controls
+        {
+
+            margin-top: 10%;
+        }
+        .main-container
+        {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+
+    input[type='number'] {
+        -moz-appearance:textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }

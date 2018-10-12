@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+<head>
+    <title>TimerApp</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+     <script src="js/angular.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <link href="css/icon.css"
+          rel="stylesheet">
+    <link href="css/font.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body data-ng-app="app" >
+
+<script>
+    var app = angular.module('app', ['ngRoute']);
+
+    app.config(function($routeProvider) {
+        $routeProvider
+                .when("/", {
+                    templateUrl : "views/timer.html",
+                    controller:'homeController'
+                })
+    });
+
+    app.controller('homeController', function($rootScope,$interval) {
+        //console.log(90+(3.6*40));
+        //var nextDeg=-90+(3.6*(70-50));
+        $rootScope.circleElapsed= {};
+        $rootScope.timer= { elapsed:{minutes:"00",seconds:"00"}};
+        $rootScope.getTime=function(time)
+        {
+
+            var minutes = (Math.floor(time / 60)).toFixed(0);
+
+            var seconds = ( time - minutes * 60).toFixed(0);
+
+            return [minutes,seconds];
+        }
+        $rootScope.startTimer=function () {
+
+            if($rootScope.timer.interval)
+            {
+                $interval.cancel($rootScope.timer.interval);
+            }
+            var backColor="white";
+
+            var elapsed=0;
+
+            var elapsedPercent =0;
+
+            var interval=1000;
+
+            var startTime = new Date();
+
+           $rootScope.timer.interval= $interval(function () {
+
+               var totalSeconds =  ($rootScope.timer.minutes*60)+$rootScope.timer.seconds;
+
+               //  elapsed +=interval;
+
+                var now = new Date();
+                elapsed =  Math.abs(now - startTime);
+
+
+                var time = $rootScope.getTime((elapsed/1000));
+
+                elapsedPercent =Math.ceil( ((elapsed/1000)*100) / totalSeconds);
+
+                //elapsedPercent = (elapsedPercent>=99)?100 : elapsedPercent;
+
+
+                    if(elapsedPercent >= 100)
+                  {
+                      $rootScope.circleElapsed.backgroundImage ='none';
+                      $rootScope.circleElapsed.animation='intermitent 0.5s linear 0s infinite';
+
+                  }
+                  else
+                    {
+                        $rootScope.circleElapsed.animation='none';
+                        $rootScope.progressColor ='#4CAF50';
+
+                        if(totalSeconds-((elapsed/1000))<=60)
+                        {
+                            $rootScope.progressColor = '#FFEB3B';
+                        }
+
+
+                        if(elapsedPercent<50)
+                        {
+                            var nextDeg =90+(3.6*elapsedPercent);
+
+                            $rootScope.circleElapsed.backgroundImage = ' linear-gradient(90deg, '+backColor+' 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient('+nextDeg+'deg, '+$rootScope.progressColor+' 50%,  '+backColor+' 50%,  '+backColor+')';
+
+
+                        }
+                        else
+                        {var nextDeg=-90+(3.6*(elapsedPercent-50));
+
+                            $rootScope.circleElapsed.backgroundImage = 'linear-gradient('+nextDeg+'deg, '+$rootScope.progressColor+' 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(270deg,  '+$rootScope.progressColor+' 50%,  '+backColor+' 50%,  '+backColor+')';
+
+                        }
+                    }
+
+
+                $rootScope.timer.elapsed.minutes = ("0"+time[0]).slice(-2);
+
+                $rootScope.timer.elapsed.seconds = ("0"+time[1]).slice(-2);
+
+                /*
+                if(elapsedPercent >= 100)
+                {
+                    $interval.cancel($scope.timer.interval);
+                }*/
+
+            },interval);
+
+
+
+        }
+
+        $rootScope.stopTimer=function () {
+
+            if($rootScope.timer.interval)
+            {
+
+                $interval.cancel($rootScope.timer.interval);
+            }
+            $rootScope.circleElapsed={};
+            $rootScope.timer= { elapsed:{minutes:"00",seconds:"00"}};
+        }
+        $rootScope.add=function (prop) {
+
+            if(!$rootScope.timer[prop])
+            {
+                $rootScope.timer[prop] =0 ;
+            }
+            $rootScope.timer[prop]=$rootScope.timer[prop]+1;
+        }
+        $rootScope.substract=function (prop) {
+
+            if(!$rootScope.timer[prop])
+            {
+                $rootScope.timer[prop] =0 ;
+            }
+            if($rootScope.timer[prop]>0)
+            {
+                $rootScope.timer[prop]=$rootScope.timer[prop]-1;
+            }
+        }
+    });
+</script>
+
+<section class="main-container" data-ng-view>
+</section>
+
+</body>
+</html>
