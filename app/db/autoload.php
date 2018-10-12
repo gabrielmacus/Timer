@@ -1,4 +1,0 @@
-<?php
-
-
-include ("ActiveRecord.php");
