@@ -16,7 +16,7 @@ class Chat implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients[$conn->resourceId] =$conn;
-
+        $conn->send(json_encode(["type"=>"conn_id","id"=>$conn->resourceId]));
 
         echo "New connection! ({$conn->resourceId})\n";
     }
@@ -33,21 +33,29 @@ class Chat implements MessageComponentInterface
                 foreach ($this->clients as $k=>$client) {
                     if ($from->resourceId !== $k) {
                         $c[]=$k;
-                        //echo "Sending {$jsonMsg["type"]}...\n";
-                        // The sender is not the receiver, send to each client connected
-                        $client->send($msg);
+                        $jsonMsg["from"] = $from->resourceId;
+                        $client->send(json_encode($jsonMsg));
                     }
                 }
                 break;
+            case 'msg':
+                //Le envio a un cliente en particular
+                if(!empty($this->clients[$jsonMsg["to"]]))
+                {
+                    $c[] = $jsonMsg["to"];
+                    $jsonMsg["from"] = $from->resourceId;
+                    $client = $this->clients[$jsonMsg["to"]];
+                    $client->send(json_encode($jsonMsg));
+                }
+
+                break;
             case 'sync-request':
                 //En el caso de que quiera sincronizar, solo le envio el msg a un cliente
-
                 foreach ($this->clients as $k=>$client) {
                     if ($from->resourceId !== $k) {
                         $c[]=$k;
-                        //echo "Sending {$jsonMsg["type"]}...\n";
-                        // The sender is not the receiver, send to each client connected
-                        $client->send($msg);
+                        $jsonMsg["from"] = $from->resourceId;
+                        $client->send(json_encode($jsonMsg));
                         break;
                     }
                 }
@@ -65,6 +73,8 @@ class Chat implements MessageComponentInterface
         unset($this->clients[$conn->resourceId]);
 
         echo "Connection {$conn->resourceId} has disconnected\n";
+
+        $this->onMessage($conn,json_encode(["type"=>"","subtype"=>"user-disconnected","id"=>$conn->resourceId]));
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
